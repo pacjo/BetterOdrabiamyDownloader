@@ -19,8 +19,14 @@ print(Fore.GREEN + " | _ \/ -_)  _|  _/ -_) '_| (_) / _` | '_/ _` | '_ \ / _` | 
 print(Fore.GREEN + " |___/\___|\__|\__\___|_|  \___/\__,_|_| \__,_|_.__/_\__,_|_|_|_\_, |___/\___/\_/\_/|_||_|_\___/\__,_\__,_\___|_|   ")
 print(Fore.GREEN + "                                                                |__/                                                ")
 
-user=input(Fore.MAGENTA + 'Podaj E-Mail: ')
-password=getpass.getpass(prompt=Fore.MAGENTA + 'Podaj hasło: ')
+if os.path.exists(f'{path}/credentials.py'):
+    import credentials
+    user=credentials.username
+    password=credentials.password
+else:
+    user=input(Fore.MAGENTA + 'Podaj E-Mail: ')
+    password=getpass.getpass(prompt=Fore.MAGENTA + 'Podaj hasło: ')
+
 bookid=input(Fore.MAGENTA + 'Podaj ID książki: ')
 
 try:
