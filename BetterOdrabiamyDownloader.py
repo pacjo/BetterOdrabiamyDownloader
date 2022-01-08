@@ -8,7 +8,7 @@ import random
 import time
 from colorama import init, Fore
 
-init(autoreset=True)
+init(autoreset=True)    # initialise Colorama
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
 path = os.path.dirname(os.path.abspath(filename))
