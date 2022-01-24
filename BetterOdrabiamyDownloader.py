@@ -82,7 +82,7 @@ if save == True:
 
 rget = requests.get(url=f'https://odrabiamy.pl/api/v1.3/ksiazki/{bookid}').content.decode('utf-8')
 if json.loads(rget).get('name') == None:
-    print('Złe ID książki!')
+    print(Fore.RED + 'Złe ID książki!')
     exit()
 
 pages = json.loads(rget).get('pages')
