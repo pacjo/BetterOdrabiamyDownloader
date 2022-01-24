@@ -20,23 +20,6 @@ print(Fore.GREEN + " | _ \/ -_)  _|  _/ -_) '_| (_) / _` | '_/ _` | '_ \ / _` | 
 print(Fore.GREEN + " |___/\___|\__|\__\___|_|  \___/\__,_|_| \__,_|_.__/_\__,_|_|_|_\_, |___/\___/\_/\_/|_||_|_\___/\__,_\__,_\___|_|   ")
 print(Fore.GREEN + "                                                                |__/                                                ")
 
-if os.path.exists(f'{path}/credentials.py'):
-    import credentials
-    user=credentials.username
-    password=credentials.password
-else:
-    user=input(Fore.MAGENTA + 'Podaj E-Mail: ')
-    password=getpass.getpass(prompt=Fore.MAGENTA + 'Podaj hasło: ')
-
-bookid=input(Fore.MAGENTA + 'Podaj ID książki: ')
-
-try:
-    rpost = requests.post(url=('https://odrabiamy.pl/api/v2/sessions'), json=({"login": f"{user}", "password": f"{password}"})).content
-    token = json.loads(rpost).get('data').get('token')
-except:
-    print(Fore.RED + 'Niepoprawny e-mail lub hasło. A może nie masz premium?')
-    exit()
-
 def download_page(token, page, bookid):
     rget = requests.get(url=f'https://odrabiamy.pl/api/v2/exercises/page/premium/{page}/{bookid}', headers={'user-agent':'new_user_agent-huawei-142','Authorization': f'Bearer {token}'}).content.decode('utf-8')
     lists = json.loads(rget).get('data')
@@ -47,10 +30,8 @@ def download_page(token, page, bookid):
         os.makedirs(f'{path}/{name}-{bookid}')
 
     for exercise in lists:
-        if not os.path.exists(f'{path}/{name}-{bookid}/{page}'):
-            os.makedirs(f'{path}/{name}-{bookid}/{page}')
         number = exercise.get('number')
-        file = open(f'{path}/{name}-{bookid}/{page}/index.html', 'a+', encoding='utf-8')
+        file = open(f'{path}/{name}-{bookid}/{page}.html', 'a+', encoding='utf-8')
         file.write(f'<head><meta charset="UTF-8"></head>\n<a style="color:red; font-size:25px;">Zadanie {number}</a><br>\n{exercise.get("solution")}<br>')
         file.close()
 
@@ -73,25 +54,25 @@ if os.path.exists(f'{path}/credentials'):
     except:
         token = False
     if token == False:
-        print('Nie udało się pobrać danych logowania z pliku. Wpisz je ręcznie!')
-        user = input('Podaj E-Mail: ')
-        password = getpass.getpass(prompt='Podaj hasło: ')
-        save = click.confirm('Zapisać dane logowania?', default=False)
+        print(Fore.RED + 'Nie udało się pobrać danych logowania z pliku. Wpisz je ręcznie!')
+        user = input(Fore.MAGENTA + 'Podaj E-Mail: ')
+        password = getpass.getpass(prompt=Fore.MAGENTA + 'Podaj hasło: ')
+        save = click.confirm(Fore.GREEN + 'Zapisać dane logowania?', default=False)
         token = get_token(user, password)
         if token == False:
-            print('Niepoprawny e-mail lub hasło. A może nie masz premium?')
+            print(Fore.RED + 'Niepoprawny e-mail lub hasło. A może nie masz premium?')
             exit()
 else:
-    user = input('Podaj E-Mail: ')
-    password = getpass.getpass(prompt='Podaj hasło: ')
+    user = input(Fore.MAGENTA + 'Podaj E-Mail: ')
+    password = getpass.getpass(prompt=Fore.MAGENTA + 'Podaj hasło: ')
     save = click.confirm('Zapisać dane logowania?', default=False)
     token = get_token(user, password)
     if token == False:
-        print('Niepoprawny e-mail lub hasło. A może nie masz premium?')
+        print(Fore.RED + 'Niepoprawny e-mail lub hasło. A może nie masz premium?')
         exit()
 
-bookid = click.prompt('Podaj ID cionszki', type=int)
-start_page = click.prompt('Strona od której chcesz zacząć pobierać\n(Enter = od początku)', type=int, default=0, show_default=False)
+bookid = click.prompt(Fore.MAGENTA + 'Podaj ID cionszki', type=int)
+start_page = click.prompt(Fore.MAGENTA + 'Strona od której chcesz zacząć pobierać\n(Enter = od początku)', type=int, default=0, show_default=False)
 
 if save == True:
     credentials = {"user":f"{user}", "password":f"{password}"}
@@ -107,13 +88,13 @@ if json.loads(rget).get('name') == None:
 pages = json.loads(rget).get('pages')
 name = json.loads(rget).get('name').replace('/','')
 for page in pages:
-    if not os.path.exists(f'{path}/{name}-{bookid}/{page}'):
+    if not os.path.exists(f'{path}/{name}-{bookid}/{page}.html'):
         if start_page <= page:
             seconds = random.randint(2,8)
             download_page(token, page, bookid)
-            print(f'Pobrano stronę {page}\nNastępna strona zostanie pobrana za {seconds} sekund')
+            print(Fore.BLUE + f'Pobrano stronę {page}\nNastępna strona zostanie pobrana za {seconds} sekund')
             time.sleep(seconds)
 if pages[-1] >= start_page:
-    print('Pobrano książkę!')
+    print(Fore.BLUE + 'Pobrano książkę!')
 else:
-    print('Podana liczba wykracza poza ilość stron w tej książce!')
+    print(Fore.RED + 'Podana liczba wykracza poza ilość stron w tej książce!')
