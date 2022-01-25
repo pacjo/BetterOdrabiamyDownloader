@@ -1,4 +1,4 @@
-# Better Odrabiamy Downloader
+![logo](images/logo.svg)
 Skrypt w pythonie do pobierania książek z POLSKIEJ strony Odrabiamy.pl
 
 # Użycie
