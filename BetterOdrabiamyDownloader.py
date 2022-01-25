@@ -24,7 +24,11 @@ def download_page(token, page, bookid):
     rget = requests.get(url=f'https://odrabiamy.pl/api/v2/exercises/page/premium/{page}/{bookid}', headers={'user-agent':'new_user_agent-huawei-142','Authorization': f'Bearer {token}'}).content.decode('utf-8')
     lists = json.loads(rget).get('data')
 
-    name = lists[0].get('book').get('name').replace('/','')
+    try:
+        name = lists[0].get('book').get('name').replace('/','')
+    except TypeError:
+        print(Fore.RED + "Osiągnąłeś dzienny limit zadań.", Fore.BLUE + "Więcej informacji na: https://github.com/pacjo/BetterOdrabiamyDownloader#limit")
+        exit()
 
     if not os.path.exists(f'{path}/{name}-{bookid}'):
         os.makedirs(f'{path}/{name}-{bookid}')
@@ -72,7 +76,7 @@ else:
         exit()
 
 bookid = click.prompt(Fore.MAGENTA + 'Podaj ID cionszki', type=int)
-start_page = click.prompt(Fore.MAGENTA + 'Strona od której chcesz zacząć pobierać\n(Enter = od początku)', type=int, default=0, show_default=False)
+start_page = click.prompt(Fore.MAGENTA + 'Strona od której chcesz zacząć pobierać\n(Enter = od początku / kontynuuj)', type=int, default=0, show_default=False)
 
 if save == True:
     credentials = {"user":f"{user}", "password":f"{password}"}
@@ -95,6 +99,6 @@ for page in pages:
             print(Fore.BLUE + f'Pobrano stronę {page}\nNastępna strona zostanie pobrana za {seconds} sekund')
             time.sleep(seconds)
 if pages[-1] >= start_page:
-    print(Fore.BLUE + 'Pobrano książkę!')
+    print(Fore.GREEN + 'Pobrano książkę!')
 else:
     print(Fore.RED + 'Podana liczba wykracza poza ilość stron w tej książce!')
