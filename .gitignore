@@ -1,3 +1,6 @@
 # credentials  file
 credentials
 __pycache__/
+
+# downloaded files
+*.html
