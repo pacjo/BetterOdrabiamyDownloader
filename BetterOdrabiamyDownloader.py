@@ -85,7 +85,7 @@ if save == True:
     json.dump(credentials, file)
     file.close()
 
-book_path = click.prompt(Fore.MAGENTA + 'Ścieżka zapisu książki', default=book_path, show_default=False)
+book_path = click.prompt(Fore.MAGENTA + f'Ścieżka zapisu książki\n(Enter = {file_path})', default=book_path, show_default=False)
 
 rget = requests.get(url=f'https://odrabiamy.pl/api/v1.3/ksiazki/{bookid}').content.decode('utf-8')
 if json.loads(rget).get('name') == None:
