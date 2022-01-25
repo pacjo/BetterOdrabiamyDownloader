@@ -11,7 +11,8 @@ from colorama import init, Fore
 init(autoreset=True)    # initialise Colorama
 
 filename = inspect.getframeinfo(inspect.currentframe()).filename
-path = os.path.dirname(os.path.abspath(filename))
+file_path = os.path.dirname(os.path.abspath(filename))
+book_path = os.path.dirname(os.path.abspath(filename))
 save = False
 
 print(Fore.GREEN + "  ___      _   _            ___     _          _    _                ___                  _              _          ")
@@ -30,12 +31,12 @@ def download_page(token, page, bookid):
         print(Fore.RED + "Osiągnąłeś dzienny limit zadań.", Fore.BLUE + "Więcej informacji na: https://github.com/pacjo/BetterOdrabiamyDownloader#limit")
         exit()
 
-    if not os.path.exists(f'{path}/{name}-{bookid}'):
-        os.makedirs(f'{path}/{name}-{bookid}')
+    if not os.path.exists(f'{book_path}/{name}-{bookid}'):
+        os.makedirs(f'{book_path}/{name}-{bookid}')
 
     for exercise in lists:
         number = exercise.get('number')
-        file = open(f'{path}/{name}-{bookid}/{page}.html', 'a+', encoding='utf-8')
+        file = open(f'{book_path}/{name}-{bookid}/{page}.html', 'a+', encoding='utf-8')
         file.write(f'<head><meta charset="UTF-8"></head>\n<a style="color:red; font-size:25px;">Zadanie {number}</a><br>\n{exercise.get("solution")}<br>')
         file.close()
 
@@ -47,8 +48,8 @@ def get_token(user, password):
     except:
         return False
 
-if os.path.exists(f'{path}/credentials'):
-    file = open(f'{path}/credentials', 'r')
+if os.path.exists(f'{file_path}/credentials'):
+    file = open(f'{file_path}/credentials', 'r')
     try:
         load = json.load(file)
         user = load.get('user')
@@ -80,9 +81,11 @@ start_page = click.prompt(Fore.MAGENTA + 'Strona od której chcesz zacząć pobi
 
 if save == True:
     credentials = {"user":f"{user}", "password":f"{password}"}
-    file = open(f"{path}/credentials", "w")
+    file = open(f"{file_path}/credentials", "w")
     json.dump(credentials, file)
     file.close()
+
+book_path = click.prompt(Fore.MAGENTA + 'Ścieżka zapisu książki', default=book_path, show_default=False)
 
 rget = requests.get(url=f'https://odrabiamy.pl/api/v1.3/ksiazki/{bookid}').content.decode('utf-8')
 if json.loads(rget).get('name') == None:
@@ -92,7 +95,7 @@ if json.loads(rget).get('name') == None:
 pages = json.loads(rget).get('pages')
 name = json.loads(rget).get('name').replace('/','')
 for page in pages:
-    if not os.path.exists(f'{path}/{name}-{bookid}/{page}.html'):
+    if not os.path.exists(f'{book_path}/{name}-{bookid}/{page}.html'):
         if start_page <= page:
             seconds = random.randint(2,8)
             download_page(token, page, bookid)
