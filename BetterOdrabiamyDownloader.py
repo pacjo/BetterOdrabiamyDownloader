@@ -2,7 +2,7 @@ import click
 import requests
 import json
 import inspect
-import os.path
+import os
 import getpass
 import random
 import time
@@ -14,6 +14,8 @@ filename = inspect.getframeinfo(inspect.currentframe()).filename
 file_path = os.path.dirname(os.path.abspath(filename))
 book_path = os.path.dirname(os.path.abspath(filename))
 save = False
+
+os.system('cls||clear')     # clear terminal before executing
 
 print(Fore.GREEN + "  ___      _   _            ___     _          _    _                ___                  _              _          ")
 print(Fore.GREEN + " | _ ) ___| |_| |_ ___ _ _ / _ \ __| |_ _ __ _| |__(_)__ _ _ __ _  _|   \ _____ __ ___ _ | |___  __ _ __| |___ _ _  ")
