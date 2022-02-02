@@ -23,6 +23,8 @@ print(Fore.GREEN + " | _ \/ -_)  _|  _/ -_) '_| (_) / _` | '_/ _` | '_ \ / _` | 
 print(Fore.GREEN + " |___/\___|\__|\__\___|_|  \___/\__,_|_| \__,_|_.__/_\__,_|_|_|_\_, |___/\___/\_/\_/|_||_|_\___/\__,_\__,_\___|_|   ")
 print(Fore.GREEN + "                                                                |__/                                                ")
 
+print(Fore.BLUE + "https://github.com/pacjo/BetterOdrabiamyDownloader\n")
+
 def download_page(token, page, bookid):
     rget = requests.get(url=f'https://odrabiamy.pl/api/v2/exercises/page/premium/{page}/{bookid}', headers={'user-agent':'new_user_agent-huawei-142','Authorization': f'Bearer {token}'}).content.decode('utf-8')
     lists = json.loads(rget).get('data')
